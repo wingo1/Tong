@@ -3,16 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <title>答题哟</title>
-<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link
+	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script
+	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
 </head>
 <body>
-<script>
-$(function(){
-   layer.alert("答题") 
-});
-</script>
+	<nav class="navbar navbar-inverse navbar-fixed-top ">
+		<div class="container-fluid">
+
+			<ul class="nav navbar-nav">
+				<li><a href="index.html">开始页</a></li>
+				<li class="active"><a href="#">答题页</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div tabindex="-1"
+		style="background: url(images/background.png) no-repeat center center/cover; padding-top: 60px; padding-bottom: 20px"
+		class="bg-primary" id="content">
+		<div class="container">
+			<row>
+			<div class="col-md-5">
+				<h1>答题测试</h1>
+				<p>和我一起</p>
+				<p>通过简单的问题，测试对彼此的了解</p>
+			</div>
+			<a id="mode_a" class="pull-right" href="#"> <img
+				data-toggle="tooltip" data-placement="left" title="示例用户"
+				style="width: 120px; height: 120px;" src="images/portrait.jpg"
+				alt="头像" class="img-circle"></a>
+		</div>
+
+		</row>
+
+	</div>
+	<!-- 答题提示 -->
+	<div id="start_hint" style='display: none; padding: 20px'>
+		<p>
+			提示：答题分为左右2栏，<strong class='text-success' style="font-size: 20px;">左侧为您待答区</strong>，右侧为对方答题区。每道题答题时间限制为<strong
+				class='text-danger' style="font-size: 20px;">5秒</strong>！
+		</p>
+	</div>
+	<!-- 答题区 -->
+	<div id='answer_area' class="container-fluid">
+		<div class="row">
+			<div >
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-info active"
+						role="progressbar"  style="width: 25%">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h3>第<span>1</span>题</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5">
+				<div class="panel panel-default ">
+					<div class="panel-heading">你的答题区</div>
+					<div class="panel-body" style="height:200px">Panel content</div>
+				</div>
+			</div>
+			<div class=" col-md-5 col-md-offset-2">
+				<div id='peer' class="panel panel-default"  >
+					<div class="panel-heading">对方答题区</div>
+					<div class="panel-body" style="height:200px">
+					<input value='ee'>
+					Panel content</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	<script>
+	$(function() {
+	    layer.open({
+		type : 1,
+		title : '提示',
+		closeBtn : 0, //不显示关闭按钮
+		anim : 2,
+		btn : [ '我知道了' ],
+		content : $("#start_hint"),
+		yes : function(index, layero) {
+		    layer.close(index); //如果设定了yes回调，需进行手工关闭
+		}
+	    });
+	});
+	$("#peer").mousedown(function(event){
+	    event.preventDefault();
+	    return;
+	});
+    </script>
 </body>
 </html>
