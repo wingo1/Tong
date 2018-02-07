@@ -39,49 +39,194 @@
 				alt="头像" class="img-circle"></a> </row>
 		</div>
 	</div>
-	<div class="container-fluid" style='margin-top:40px'>
-		<div class="row"><div class='col-sm-12 col-md-12'><div class="center-block" id='score' style='width:300px;height:400px'></div></div></div>
-		<div class="row"></div>
-	</div>	
+	<div class="container-fluid" style='margin-top: 40px'>
+
+		<div class="row">
+			<div class='col-sm-4 col-md-4'>
+				<div id='score' style='width: 300px; height: 400px'></div>
+			</div>
+			<div class='col-sm-4 col-md-4'>
+				<div id='pie' style='width: 300px; height: 400px'></div>
+			</div>
+			<div class='col-sm-4 col-md-4'>
+				<div id='line' style='width: 400px; height: 400px'></div>
+			</div>
+		</div>
+		<div class="row">
+			<button id='showSummary' onclick="showSummary()"
+				style='display: none; margin-top: 80px'
+				class="btn btn-success btn-lg center-block" type="button">
+				<span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>查看总结分析
+			</button>
+
+		</div>
+	</div>
+	<!-- 总结 -->
+	<div id="summary" style='display: none; padding: 20px'>
+		<p>
+			测试结果表明:<strong class='text-success'
+				style="font-size: 20px;">很明显</strong>，张旭东<strong class='text-warning'
+				style="font-size: 20px;">确实</strong>比你更加喜欢和爱对方。你<strong class='text-danger'
+				style="font-size: 20px;">不得不</strong>承认。
+		</p>
+	</div>
 	<script>
-	var score=getQueryString("score");
-	$(function(){
-	    if(score==100){
-			layer.alert("不可思议，你们都非常了解和爱对方",function(){
-			    window.location.href="album.html";
-			});
+	var score = getQueryString("score");
+	$(function() {
+	    if (score == 100) {
+		layer.alert("不可思议，你们都非常了解和爱对方", function() {
+		    window.location.href = "album.html";
+		});
 	    }
+
+	    layer.msg("开始分析,请稍后", {
+		  time: 1000 //2秒关闭（如果不配置，默认是3秒）
+		}, function() {
+		layer.load();
+		setTimeout("render()", 3000);
+	    });
+
 	});
-	var myChart = echarts.init(document.getElementById('score'));
+	function render() {
+	    layer.closeAll();
+	    $("#showSummary").show();
+	    var myChart = echarts.init(document.getElementById('score'));
+	    // 指定图表的配置项和数据
+	    var option = {
+		title : {
+		    text : '得分情况'
+		},
+		tooltip : {},
+		legend : {
+		    data : [ '分数' ]
+		},
+		xAxis : {
+		    data : [ "你（周桐）", "对方（张旭东）" ]
+		},
+		yAxis : {},
+		series : [ {
+		    name : '分数',
+		    type : 'bar',
+		    data : [ score, 100 ]
+		} ]
+	    };
 
-	// 指定图表的配置项和数据
-	var option = {
-	    title : {
-		text : '得分情况'
-	    },
-	    tooltip : {},
-	    legend : {
-		data : [ '分数' ]
-	    },
-	    xAxis : {
-		data : [ "你（周桐）", "对方（张旭东）" ]
-	    },
-	    yAxis : {},
-	    series : [ {
-		name : '分数',
-		type : 'bar',
-		data : [ score, 100 ]
-	    } ]
-	};
+	    // 使用刚指定的配置项和数据显示图表。
+	    myChart.setOption(option);
+	    //pie
+	    var pieChart = echarts.init(document.getElementById('pie'));
+	    option = {
+		title : {
+		    text : '了解程度',
+		    left : 'center',
+		    top : 20,
+		},
+		tooltip : {
+		    trigger : 'item',
+		    formatter : "{a} <br/>{b} : {c} ({d}%)"
+		},
+		visualMap : {
+		    show : false,
+		    min : 80,
+		    max : 600,
+		    inRange : {
+			colorLightness : [ 0, 1 ]
+		    }
+		},
+		series : [ {
+		    name : '了解程度',
+		    type : 'pie',
+		    radius : '75%',
+		    center : [ '50%', '50%' ],
+		    data : [ {
+			value : 335,
+			name : '生活习惯'
+		    }, {
+			value : 310,
+			name : '兴趣爱好'
+		    }, {
+			value : 274,
+			name : '消费观念'
+		    }, {
+			value : 235,
+			name : '人缘修养'
+		    }, {
+			value : 400,
+			name : '性格特性'
+		    } ].sort(function(a, b) {
+			return a.value - b.value;
+		    }),
+		    roseType : 'radius',
+		    label : {
+			normal : {
+			    textStyle : {
+				color : 'rgba(255, 255, 255, 0.3)'
+			    }
+			}
+		    },
+		    labelLine : {
+			normal : {
+			    lineStyle : {
+				color : 'rgba(255, 255, 255, 0.3)'
+			    },
+			    smooth : 0.2,
+			    length : 10,
+			    length2 : 20
+			}
+		    },
 
-	// 使用刚指定的配置项和数据显示图表。
-	myChart.setOption(option);
+		    animationType : 'scale',
+		    animationEasing : 'elasticOut',
+		    animationDelay : function(idx) {
+			return Math.random() * 200;
+		    }
+		} ]
+	    };
+	    pieChart.setOption(option);
+	    //line
+	    var lineChart = echarts.init(document.getElementById('line'));
+	    option = {
+		title : {
+		    text : '感情随时间增长情况',
+		    left : 'center',
+		    top : 20,
+		},
+		xAxis : {
+		    type : 'category',
+		    boundaryGap : false,
+		    data : [ '2014', '2015', '2016', '2017', '2018' ]
+		},
+		yAxis : {
+		    type : 'value'
+		},
+		series : [ {
+		    data : [ 0, 200, 800, 900, 1000 ],
+		    type : 'line',
+		    areaStyle : {}
+		} ]
+	    };
+	    lineChart.setOption(option);
+	}
 	function getQueryString(name) {
 	    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	    var r = window.location.search.substr(1).match(reg);
 	    if (r != null)
 		return (r[2]);
 	    return null;
+	}
+	function showSummary() {
+	    layer.open({
+		type : 1,
+		title : '总结',
+		closeBtn : 0, //不显示关闭按钮
+		anim : 2,
+		btn : [ '好的，我知道了' ],
+		content : $("#summary"),
+		yes : function(index, layero) {
+		    layer.close(index); //如果设定了yes回调，需进行手工关闭
+
+		}
+	    });
 	}
     </script>
 </body>
