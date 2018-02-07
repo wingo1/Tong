@@ -10,6 +10,7 @@
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+<script src="js/questions.js"></script>
 </head>
 <body>
 	<nav class="navbar navbar-inverse navbar-fixed-top ">
@@ -34,10 +35,10 @@
 			<a id="mode_a" class="pull-right" href="#"> <img
 				data-toggle="tooltip" data-placement="left" title="示例用户"
 				style="width: 120px; height: 120px;" src="images/portrait.jpg"
-				alt="头像" class="img-circle"></a>
+				alt="头像" class="img-circle"></a> </row>
 		</div>
 
-		</row>
+
 
 	</div>
 	<!-- 答题提示 -->
@@ -50,40 +51,100 @@
 	<!-- 答题区 -->
 	<div id='answer_area' class="container-fluid">
 		<div class="row">
-			<div >
+			<div>
 				<div class="progress">
-					<div class="progress-bar progress-bar-striped progress-bar-info active"
-						role="progressbar"  style="width: 25%">
-					</div>
+					<div
+						class="progress-bar progress-bar-striped progress-bar-info active"
+						role="progressbar" style="width: 0%"></div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12 col-sm-12">
-				<h3>第<span>1</span>题</h3>
+				<h3>
+					第<span id='question_num'>1</span>题,目前得分<span id='score'>0</span>分
+				</h3>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-5 col-sm-5">
-				<div class="panel panel-default ">
+				<div id='you' class="panel panel-default ">
 					<div class="panel-heading">你的答题区</div>
-					<div class="panel-body" style="height:200px">Panel content</div>
+					<div class="panel-body" style="height: 200px">
+						<strong>题目：</strong> <span id="question"></span> <br /> <br />
+						<div id='sel_A' class="radio">
+							<label> <input type="radio" name="optionsRadios1"
+								id="optionsRadios1" value="A">A.<span></span>
+							</label>
+						</div>
+						<div id='sel_B' class="radio">
+							<label> <input type="radio" name="optionsRadios1"
+								id="optionsRadios1" value="B">B.<span></span>
+							</label>
+						</div>
+						<div id='sel_C' class="radio">
+							<label> <input type="radio" name="optionsRadios1"
+								id="optionsRadios1" value="C">C.<span></span>
+							</label>
+						</div>
+						<div id='sel_D' class="radio">
+							<label> <input type="radio" name="optionsRadios1"
+								id="optionsRadios1" value="D">D.<span></span>
+							</label>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class=" col-md-5 col-md-offset-2 col-sm-5 col-sm-offset-2">
-				<div id='peer' class="panel panel-default"  >
+			<div class="col-md-2 col-sm-2">
+				<h1
+					style="font-size: 50px; font-weight: bold; color: red; text-align: center; line-height: 200px">VS</h1>
+			</div>
+			<div class=" col-md-5  col-sm-5 ">
+				<div id='peer' class="panel panel-default">
 					<div class="panel-heading">对方答题区</div>
-					<div class="panel-body" style="height:200px">
-					<input value='ee'>
-					Panel content</div>
+					<div class="panel-body" style="height: 200px">
+						<strong>题目：</strong> <span id="question"></span> <br /> <br />
+						<div id='sel_A' class="radio">
+							<label> <input type="radio" name="optionsRadios2"
+								id="optionsRadios2" value="A">A.<span></span>
+							</label>
+						</div>
+						<div id='sel_B' class="radio">
+							<label> <input type="radio" name="optionsRadios2"
+								id="optionsRadios2" value="B">B.<span></span>
+							</label>
+						</div>
+						<div id='sel_C' class="radio">
+							<label> <input type="radio" name="optionsRadios2"
+								id="optionsRadios2" value="C">C.<span></span>
+							</label>
+						</div>
+						<div id='sel_D' class="radio">
+							<label> <input type="radio" name="optionsRadios2"
+								id="optionsRadios2" value="D">D.<span></span>
+							</label>
+						</div>
+					</div>
 				</div>
 			</div>
 
 		</div>
-
+		<!-- 结果提示 -->
+		<div id="result_hint" style='display: none; padding: 20px'>
+			<p>
+				回答<strong id='you_result' class='text-success'
+					style="font-size: 20px;"></strong>，对方回答<strong class='text-success'
+					style="font-size: 20px;">正确</strong>！
+			</p>
+		</div>
 	</div>
 	<script>
+	var length;
+	var current_num;
+	var timer;
+	var score = 0;
 	$(function() {
+	    length = question_you.length;//题目数量
 	    layer.open({
 		type : 1,
 		title : '提示',
@@ -93,13 +154,95 @@
 		content : $("#start_hint"),
 		yes : function(index, layero) {
 		    layer.close(index); //如果设定了yes回调，需进行手工关闭
+		    startAnswer(0);
 		}
 	    });
+	    $("#peer").click(function(event) {
+		layer.msg("请在自己作答区选择");
+		event.preventDefault();
+	    });
+	    $("#you :radio").change(function() {
+		checkAnswer();
+	    });
 	});
-	$("#peer").mousedown(function(event){
-	    event.preventDefault();
-	    return;
-	});
+
+	function startAnswer(num) {
+	    if(num==length){//结束
+			end();
+	    	return;
+	    }
+	    current_num = num;
+	    setTimeout("startHint(" + num + ")", 200);
+	}
+	function startHint(num) {
+	    layer.msg('1秒后开始作答，第' + (num + 1) + "题", {
+		icon : 0,
+		time : 2000
+	    //2秒关闭（如果不配置，默认是3秒）
+	    }, function() {
+		renderBoth(num);
+		$(".progress-bar").css("width",
+			((num + 1) / length) * 100 + "%");
+		timer = setTimeout("checkAnswer()", 5000)//计时开始
+	    });
+	}
+	function renderBoth(num) {
+	    $("#you :radio").val([]);
+	    $("#peer :radio").val([]);
+	    $("#question_num").html(num + 1);
+	    $("#you #question").html(question_you[num].desc);
+	    $("#you #sel_A span").html(question_you[num].A);
+	    $("#you #sel_B span").html(question_you[num].B);
+	    $("#you #sel_C span").html(question_you[num].C);
+	    $("#you #sel_D span").html(question_you[num].D);
+	    $("#peer #question").html(question_peer[num].desc);
+	    $("#peer #sel_A span").html(question_peer[num].A);
+	    $("#peer #sel_B span").html(question_peer[num].B);
+	    $("#peer #sel_C span").html(question_peer[num].C);
+	    $("#peer #sel_D span").html(question_peer[num].D);
+	}
+	function checkAnswer() {
+	    var eachScore = 100 / length;
+	    clearTimeout(timer);
+	    //给自己作答LOL
+	    $(":radio[name=optionsRadios2]").val(
+		    [ question_peer[current_num].answer ]);
+	    answer = $(":radio[name=optionsRadios1]:checked").val();
+	    $("#you_result").removeClass();
+	    if (answer == undefined) {
+
+		$("#you_result").addClass("text-danger");
+		$("#you_result").html("超时");
+
+	    } else if (answer == question_you[current_num].answer) {
+		score = score + eachScore;
+		$("#you_result").addClass("text-success");
+		$("#you_result").html("正确");
+	    } else {
+		$("#you_result").addClass("text-danger");
+		$("#you_result").html("错误");
+
+	    }
+		$("#score").html(score);
+	    layer.open({
+		type : 1,
+		title : '答题结果',
+		closeBtn : 0, //不显示关闭按钮
+		anim : 2,
+		btn : [ '下一题' ],
+		content : $("#result_hint"),
+		yes : function(index, layero) {
+		    layer.close(index); //如果设定了yes回调，需进行手工关闭
+		    startAnswer(current_num + 1);
+		}
+	    });
+
+	}
+	function end(){
+	   layer.alert("答题结束，点击查看结果",function(){
+	       window.location.href='result.html?score='+score;
+	   });
+	}
     </script>
 </body>
 </html>
