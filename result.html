@@ -49,7 +49,7 @@
 				<div id='pie' style='width: 300px; height: 400px'></div>
 			</div>
 			<div class='col-sm-4 col-md-4'>
-				<div id='line' style='width: 400px; height: 400px'></div>
+				<div id='line' style='width: 300px; height: 400px'></div>
 			</div>
 		</div>
 		<div class="row">
@@ -200,7 +200,7 @@
 		    type : 'value'
 		},
 		series : [ {
-		    data : [ 0, 200, 800, 900, 1000 ],
+		    data : [ 0, 20, 80, 90, 100 ],
 		    type : 'line',
 		    areaStyle : {}
 		} ]
@@ -220,11 +220,11 @@
 		title : '总结',
 		closeBtn : 0, //不显示关闭按钮
 		anim : 2,
-		btn : [ '好的，我知道了' ],
+		btn : [ '是的，我承认' ],
 		content : $("#summary"),
 		yes : function(index, layero) {
 		    layer.close(index); //如果设定了yes回调，需进行手工关闭
-
+			window.location.href="album.html";
 		}
 	    });
 	}
