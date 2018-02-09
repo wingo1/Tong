@@ -6,32 +6,151 @@
 <link
 	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	rel="stylesheet">
-	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-	<script
-		src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+<style>
+.saying:after {
+  content: "|";
+  font-family: Arial, sans-serif;
+  font-size: 1.2em;
+  line-height: 0;
+  display: inline-block;
+  vertical-align: baseline;
+  opacity: 1;
+  animation: caret 500ms infinite;
+}
+.carousel-control.left{
+	background-image:none
+}
+.carousel-control.right{
+	background-image:none
+}
+</style>
 </head>
 <body>
-<input name='text' type="text">
-<input name='radio' type="radio" value='1'>
-<input name='radio' type="radio"  value='2'>
-<input name='radio' type="radio"  value='3'>
-<input name='checkbox[]' type="checkbox" value='1' >
-<input name='checkbox[]' type="checkbox"  value='2'>
-<input name='checkbox[]' type="checkbox"  value='3'>
-<button onclick="text()">text</button>
-<script>
-$(function(){
-     $(":text").val("TEXT");
-    $(":radio").val(['2']);
-    $(":checkbox").val(['2']);
-    //$(":checkbox[value=2]").prop("checked",true);
-  
-});
-function text(){
-    alert($("input[name='checkbox[]']").val()); 
-}
+	<div class="jumbotron" style="color: white; padding: 120px 0 200px; background: url(images/WALLEAUTOMN.png) no-repeat center center/cover;">
+		<div class="container">
+			<h1>Hello, 阿桐：</h1>
+			<p id="type" style='height:200px;margin-top:50px'></p>
+			<p>
+				<a class="btn btn-primary btn-lg" href="#" role="button"
+					onclick="$('.jumbotron').slideUp(2000);setTimeout('$(\'#rest\').fadeIn(6000)',1000)">继续</a>
+			</p>
+		</div>
+	</div>
+	<div style="display: none" id="w">
+		距与你相识已过去了##,
+		一起经历了许多，感受了许多，成长了许多，
+		终于有如今的相伴。
+		感谢你出现在我生命中。
+		我会一直牵着你的手，一路陪伴。
+	</div>
+	<nav class="navbar navbar-inverse navbar-fixed-top ">
+		<div class="container-fluid">
 
-</script>
+			<ul class="nav navbar-nav">
+				<li><a href="index.html">开始页</a></li>
+				<li><a href="#">答题页</a></li>
+				<li><a href="#">结果页</a></li>
+				<li class="active"><a href="#">相册</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div id="rest" class="container-fluid"
+		style='padding-top: 100px; display: none;background: url(images/WALLEAUTOMN_BLUR.png) repeat center center/cover;'>
+		
+		<div class="row">
+			<div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2">
+
+				<div id="carousel-example-generic" class="carousel slide" style="height:500px">
+					<!-- Indicators -->
+					<ol class="carousel-indicators">
+					</ol>
+
+					<!-- Wrapper for slides -->
+					<div class="carousel-inner" role="listbox">
+						
+					</div>
+					<!-- Controls -->
+					<a class="left carousel-control" href="#carousel-example-generic"
+						role="button" data-slide="prev"> <span
+						class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+						<span class="sr-only">Previous</span>
+					</a> <a class="right carousel-control" href="#carousel-example-generic"
+						role="button" data-slide="next"> <span
+						class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+						<span class="sr-only">Next</span>
+					</a>
+				</div>
+			</div>
+
+		</div>
+		<div class="row">
+		<div style="height:100px;margin-top:50px">
+			<div class="row"><audio class='center-block' style=" opacity: 0.1" src="audios/You Are My Sunshine_Elizabeth Mitchell.mp3" autoplay='autoplay' controls="controls"></div>
+		</div>
+		</div>
+
+	</div>
+	<script>
+	
+	var index=0;
+	var word;
+	var together = new Date();
+	together.setFullYear(2014, 10, 17);
+	together.setHours(20);
+	together.setMinutes(34);
+	together.setSeconds(07);
+	together.setMilliseconds(0);
+	
+	$(function(){
+	    var index=0;
+	    for(var i=0;i<6;i++){
+			index=index+1;
+		 	$(".carousel-indicators").append('<li data-target="#carousel-example-generic" data-slide-to="'+index+'"></li>');
+			$(".carousel-inner").append('<div class="item"><img style="height:500px" src="images/album/'+index+'.jpg" class="img-responsive center-block"></div>');
+	    }
+	    $(".carousel-indicators li:first").addClass("active");
+	    $(".carousel-inner div:first").addClass("active");
+	    $('.carousel').carousel();
+	    
+	    
+	   
+	    setInterval(type, 200);
+	});
+	function type(){
+	   word=document.getElementById("w").innerHTML;
+	   word= word.replace("##",timeElapse(together))
+	    var typePanel = document.getElementById("type");
+	    typePanel.innerText = word.substring(0,index++);
+	    if(index % 3 == 0){
+	        typePanel.className = "";
+	    }else if(index % 3 == 1){
+	        typePanel.className = "saying";
+	    }
+	}
+	function timeElapse(date){
+		var current = Date();
+		var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
+		var days = Math.floor(seconds / (3600 * 24));
+		seconds = seconds % (3600 * 24);
+		var hours = Math.floor(seconds / 3600);
+		if (hours < 10) {
+			hours = "0" + hours;
+		}
+		seconds = seconds % 3600;
+		var minutes = Math.floor(seconds / 60);
+		if (minutes < 10) {
+			minutes = "0" + minutes;
+		}
+		seconds = seconds % 60;
+		if (seconds < 10) {
+			seconds = "0" + seconds;
+		}
+		return  days + "天" + hours + "小时" + minutes + "分钟" + seconds + "秒"; 
+	}
+	</script>
 </body>
 </html>

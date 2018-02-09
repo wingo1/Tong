@@ -90,6 +90,7 @@
 	function render() {
 	    layer.closeAll();
 	    $("#showSummary").show();
+	    $("#showSummary")[0].scrollIntoView();
 	    var myChart = echarts.init(document.getElementById('score'));
 	    // 指定图表的配置项和数据
 	    var option = {
